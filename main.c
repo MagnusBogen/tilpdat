@@ -12,21 +12,25 @@ int main() {
     }
     elev_set_motor_direction(DIRN_STOP);
     
-    
-    int running = 1;
-    ElevatorState currentState = INIT;
-    while(running){
+
+    ElevatorState currentState = do_INIT();
+    while(1){
 	switch(currentState){
 	    case INIT:
-	        currentState = init();
+	        currentState = do_INIT();
 	        break;
 	    case IDLE:
-		  currentState = idleElevator();
+		  currentState = do_IDLE();
 		  break;
         case UP:
             break;
         case DOWN:
 		  break;
+		case FLOOR:
+			break;
+
+		case STOP:
+			break;
 	}
     }
     
