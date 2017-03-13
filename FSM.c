@@ -23,6 +23,9 @@ ElevatorState do_INIT(){
 ElevatorState do_IDLE(){
 	elev_set_motor_direction(DIRN_STOP);
 	scan_buttons();
+	if (stopButton){
+		return STOP;
+	}
 	FSM_floor = elev_get_floor_sensor_signal();
 	switch (next_dir(dir, FSM_floor, IDLE)){
 		case 1:
@@ -39,14 +42,49 @@ ElevatorState do_IDLE(){
 	}
 
 
-	return IDLE;
+	return IDLE; //(//)
 }
 
 ElevatorState do_UP(){
 	elev_set_motor_direction(DIRN_UP);
+	dir = DIRN_UP;
 	scan_buttons();
+	if (stopButton){
+		return STOP;
+	}
+	FSM_floor = elev_get_floor_sensor_signal();
 	if (elev_get_floor_sensor_signal()!= -1){
-		switch (next_dir(dir, FSM_floor, UP)){
+		switch (next_dir(DIRN_UP, FSM_floor, UP)){
+			case 1:
+			return UP;
+			break;
+
+			case -1:
+			return DOWN;
+			break;
+
+			case 0:
+			return IDLE;
+			
+			default:
+			return IDLE;
+		}
+	}
+	printf("In UP\n");
+
+	return UP;
+}
+
+ElevatorState do_DOWN(){
+	dir = DIRN_DOWN;
+	elev_set_motor_direction(DIRN_DOWN);
+	scan_buttons();
+	if (elev_get_stop_signal()){
+		return STOP;
+	}
+	FSM_floor = elev_get_floor_sensor_signal();
+	if (elev_get_floor_sensor_signal()!= -1){
+		switch (next_dir(DIRN_DOWN, FSM_floor, DOWN)){
 			case 1:
 			return UP;
 			break;
@@ -62,12 +100,6 @@ ElevatorState do_UP(){
 	}
 	printf("In UP\n");
 
-	return UP;
-}
-
-ElevatorState do_DOWN(){
-	elev_set_motor_direction(DIRN_DOWN);
-	printf("In DOWN\n");
 	return DOWN;
 }
 
@@ -78,6 +110,15 @@ ElevatorState do_FLOOR(){
 
 ElevatorState do_STOP(){
 	printf("In STOP\n");
+	elev_set_motor_direction(DIRN_STOP);
+	reset_all();
+	while(1){
+		if(!elev_get_stop_signal()){
+			break;
+		}
+
+	}
+	
 	return IDLE;
 }
 

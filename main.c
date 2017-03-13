@@ -1,7 +1,5 @@
 #include "elev.h"
 #include "FSM.h"
-
-
 #include <stdio.h>
 
 

@@ -4,6 +4,8 @@
 #include "LightStates.h"
 
 
+
+
 void set(int Button, int Floor){
 	buttonRegister[Button][Floor] = true;
 }
@@ -86,9 +88,9 @@ int next_dir(int lastDir, int lastFloor, int state){
 			}
 
 			else if(buttonRegister[1][f] && lastFloor == f)	{
-				for (int f=lastFloor+1; f < N_FLOORS; f++){
+				for (int fl=lastFloor+1; fl < N_FLOORS; fl++){
 					for (int b=0; b<N_BUTTONS; b++){
-						if (buttonRegister[b][f]){
+						if (buttonRegister[b][fl]){
 							return 1;
 						}
 
@@ -118,9 +120,9 @@ int next_dir(int lastDir, int lastFloor, int state){
 			}
 
 			else if(buttonRegister[0][f] && lastFloor == f)	{
-				for (int f=lastFloor-1; f >= 0; f--){
+				for (int fl=lastFloor-1; fl >= 0; fl--){
 					for (int b=0; b<N_BUTTONS; b++){
-						if (buttonRegister[b][f]){
+						if (buttonRegister[b][fl]){
 							return -1;
 						}
 
