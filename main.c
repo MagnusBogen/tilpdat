@@ -4,7 +4,8 @@
 
 
 int main() {
-    // Initialize hardware
+	//test_dir();
+    //Initialize hardware
     if (!elev_init()) {
         printf("Unable to initialize elevator hardware!\n");
         return 1;
@@ -39,5 +40,6 @@ int main() {
     }
     
     return 0;
+    
   
 }
