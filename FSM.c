@@ -121,12 +121,20 @@ ElevatorState do_STOP(){
 	elev_set_motor_direction(DIRN_STOP);
 	elev_set_stop_lamp(1);
 	reset_all();
+	if(elev_get_floor_sensor_signal() != -1){
+		elev_set_door_open_lamp(1);
+	}
 	while(1){
+		if(elev_get_stop_signal()){
+			//Do Nothing
+		}
+		else{
 		scan_buttons();
 		for (int b = 0; b < N_BUTTONS; b++){
 			for (int f = 0; f < N_FLOORS; f++){
 					if (buttonRegister[b][f]){
 						elev_set_stop_lamp(0);
+						elev_set_door_open_lamp(0);
 						return INIT;
 
 					}
@@ -135,26 +143,12 @@ ElevatorState do_STOP(){
 
 	
 
-			}
+				}
 
+			}
 		}
 	}
 	
 	return INIT;
 }
 
-ElevatorState test_dir(){
-	int value;
-	//printf("In IDLE\n");
-	//scan_buttons();
-	print_register();
-	buttonRegister[BUTTON_CALL_UP][0] = true;
-	//buttonRegister[BUTTON_CALL_DOWN][1] = true;
-	print_register();
-	value = next_dir(DIRN_DOWN, 2, IDLE);
-	printf("%d\n", value);
-
-
-
-	return IDLE;
-}

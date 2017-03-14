@@ -16,5 +16,5 @@ ElevatorState do_UP();
 ElevatorState do_DOWN();
 ElevatorState do_FLOOR();
 ElevatorState do_STOP();
-ElevatorState test_dir();
+
 

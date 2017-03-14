@@ -44,11 +44,6 @@ void reset(int Button, int Floor){
 }
 
 
-bool get(int Button, int Floor){
-	return buttonRegister[Button][Floor];	
-}
-
-
 void reset_all(){
 	printf("In rese_all");
 	for (int b = 0; b < N_BUTTONS; b++){
@@ -65,19 +60,6 @@ void reset_all(){
 
 	}
 }
-
-
-void print_register(){
-	for (int b = 0; b < N_BUTTONS; b++){
-		printf("\n");
-		for (int f = 0; f < N_FLOORS; f++){
-			printf("Button/floor/value: %d %d",b,f);
-			printf(" %d", buttonRegister[b][f]);
-			printf("\n");
-	}
-}
-}
-
 
 
 void scan_buttons(){
@@ -112,18 +94,14 @@ int next_dir(int lastDir, int lastFloor, int state){
 			if (buttonRegister[2][f] && lastFloor == f)	{
 				reset(2,f);
 				reset(0,f);
-				if (empty_above(f)){
-					reset(1,f);
-				}
+				reset(1,f);
 				return 0;
 			}
 
 			else if(buttonRegister[0][f] && lastFloor == f)	{
 				reset(0,f);
 				reset(2,f);
-				if (empty_above(f)){
-					reset(1,f);
-				}
+				reset(1,f);
 				return 0;
 			}
 
@@ -143,18 +121,14 @@ int next_dir(int lastDir, int lastFloor, int state){
 			if (buttonRegister[2][f] && lastFloor == f)	{
 				reset(2,f);
 				reset(1,f);
-				if (empty_below(f)){
-					reset(0,f);
-				}
+				reset(0,f);
 				return 0;
 			}
 
 			else if(buttonRegister[1][f] && lastFloor == f)	{
 				reset(1,f);
 				reset(2,f);
-				if (empty_above(f)){
-					reset(0,f);
-				}
+				reset(0,f);
 				return 0;
 			}
 
@@ -177,7 +151,9 @@ int next_dir(int lastDir, int lastFloor, int state){
 				if (buttonRegister[2][f]){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
+						reset(1,f);
 						reset(2,f);
+						reset(0,f);
 						return 0;
 					}
 					else {return -1;}
@@ -187,6 +163,8 @@ int next_dir(int lastDir, int lastFloor, int state){
 				else if(buttonRegister[0][f]){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
+						reset(1,f);
+						reset(2,f);
 						reset(0,f);
 						return 0;
 					}
@@ -197,6 +175,8 @@ int next_dir(int lastDir, int lastFloor, int state){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
 						reset(1,f);
+						reset(2,f);
+						reset(0,f);
 						return 0;
 					}
 					else {return -1;}
@@ -212,7 +192,9 @@ int next_dir(int lastDir, int lastFloor, int state){
 				if (buttonRegister[2][f]){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
+						reset(1,f);
 						reset(2,f);
+						reset(0,f);
 						return 0;
 					}
 					else {return -1;}
@@ -222,6 +204,8 @@ int next_dir(int lastDir, int lastFloor, int state){
 				else if(buttonRegister[0][f]){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
+						reset(1,f);
+						reset(2,f);
 						reset(0,f);
 						return 0;
 					}
@@ -232,6 +216,8 @@ int next_dir(int lastDir, int lastFloor, int state){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
 						reset(1,f);
+						reset(2,f);
+						reset(0,f);
 						return 0;}
 					else {return -1;}
 				}
