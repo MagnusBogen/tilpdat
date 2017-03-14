@@ -29,6 +29,13 @@ int timer_delay(int t){
     time_t start = timer_start();
     while(1){
         scan_buttons();
+        if(buttonRegister[0][elev_get_floor_sensor_signal()] || buttonRegister[1][elev_get_floor_sensor_signal()] || buttonRegister[2][elev_get_floor_sensor_signal()]){
+            reset(0,elev_get_floor_sensor_signal());
+            reset(1,elev_get_floor_sensor_signal());
+            reset(2,elev_get_floor_sensor_signal());
+            start = timer_start();
+            
+        }
         if(elev_get_stop_signal()){
             return(0);
         }

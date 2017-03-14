@@ -14,7 +14,7 @@ ElevatorState do_INIT(){
 
 	}else{
 		elev_set_motor_direction(DIRN_STOP);
-		if (elev_get_floor_sensor_signal() <= -1){
+		if (elev_get_floor_sensor_signal() >= 0){
 		 elev_set_floor_indicator(elev_get_floor_sensor_signal());
 		}
 		dir = DIRN_DOWN;
@@ -103,12 +103,17 @@ ElevatorState do_DOWN(){
 }
 
 ElevatorState do_FLOOR(){
-	printf("In FLOOR\n");
+	printf("In FLOOR %d\n", elev_get_floor_sensor_signal() + 1);
 	elev_set_motor_direction(DIRN_STOP);
+
+	elev_set_floor_indicator(elev_get_floor_sensor_signal());
+
 	elev_set_door_open_lamp(1);
-	timer_delay(3);
-	elev_set_door_open_lamp(0);
-	return IDLE;
+	if (timer_delay(3)){
+		elev_set_door_open_lamp(0);
+		return IDLE;
+	}
+	return STOP;
 }
 
 ElevatorState do_STOP(){

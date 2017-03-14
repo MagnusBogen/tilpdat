@@ -4,7 +4,32 @@
 #include "LightStates.h"
 
 
-
+bool empty_above(int floor){
+	if (floor == 3){
+		return true;
+	}
+	for (int b = 0; b < N_BUTTONS; b++){
+		for (int f = floor+1; f < N_FLOORS; f++){
+			if(buttonRegister[b][f]){
+				return false;
+			}
+		}
+	}
+	return true;
+}
+bool empty_below(int floor){
+	if (floor == 0){
+		return true;
+	}
+	for (int b = 0; b < N_BUTTONS; b++){
+		for (int f = floor-1; f >= 0; f--){
+			if(buttonRegister[b][f]){
+				return false;
+			}
+		}
+	}
+	return true;
+}
 
 void set(int Button, int Floor){
 	buttonRegister[Button][Floor] = true;
@@ -56,9 +81,9 @@ void print_register(){
 
 
 void scan_buttons(){
-	if(elev_get_floor_sensor_signal()!=-1){
-		elev_set_floor_indicator(elev_get_floor_sensor_signal());
-	}
+//	if (elev_get_floor_sensor_signal() >= 0){
+//		 elev_set_floor_indicator(elev_get_floor_sensor_signal());
+//		}
 	for (int b = 0; b < N_BUTTONS; b++){
 		for (int f = 0; f < N_FLOORS; f++){
 			if ((f==3 && b==BUTTON_CALL_UP) || (f==0 && b==BUTTON_CALL_DOWN)){
@@ -87,29 +112,25 @@ int next_dir(int lastDir, int lastFloor, int state){
 			if (buttonRegister[2][f] && lastFloor == f)	{
 				reset(2,f);
 				reset(0,f);
+				if (empty_above(f)){
+					reset(1,f);
+				}
 				return 0;
 			}
 
 			else if(buttonRegister[0][f] && lastFloor == f)	{
 				reset(0,f);
 				reset(2,f);
+				if (empty_above(f)){
+					reset(1,f);
+				}
 				return 0;
 			}
 
-			else if(buttonRegister[1][f] && lastFloor == f)	{
-				for (int fl=lastFloor+1; fl < N_FLOORS; fl++){
-					for (int b=0; b<N_BUTTONS; b++){
-						if (buttonRegister[b][fl]){
-							return 1;
-						}
-
-					}
-				}
+			else if(buttonRegister[1][f] && lastFloor == f && empty_above(f)){
 				reset(1,f);
 				return 0;
 			}
-
-			//else{/*printf("END LOOP\n");*/}
 		
 		}
 	}
@@ -122,33 +143,29 @@ int next_dir(int lastDir, int lastFloor, int state){
 			if (buttonRegister[2][f] && lastFloor == f)	{
 				reset(2,f);
 				reset(1,f);
+				if (empty_below(f)){
+					reset(0,f);
+				}
 				return 0;
 			}
 
 			else if(buttonRegister[1][f] && lastFloor == f)	{
 				reset(1,f);
 				reset(2,f);
+				if (empty_above(f)){
+					reset(0,f);
+				}
 				return 0;
 			}
 
-			else if(buttonRegister[0][f] && lastFloor == f)	{
-				for (int fl=lastFloor-1; fl >= 0; fl--){
-					for (int b=0; b<N_BUTTONS; b++){
-						if (buttonRegister[b][fl]){
-							return -1;
-						}
-
-					}
-				}
+			else if(buttonRegister[0][f] && lastFloor == f && empty_below(f))	{
 				reset(0,f);
 				return 0;
 			}
 
-			//else{printf("END LOOP \n");}
-
 		}
 
-		}
+	}
 ////////////////////////////IDLE//////////////////////////////////////////
 	else if (state == 1){
 		//printf("In IDLE\n");
