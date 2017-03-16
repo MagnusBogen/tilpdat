@@ -1,0 +1,1 @@
+int determ_dir(int lastDir, int lastFloor, int state);
