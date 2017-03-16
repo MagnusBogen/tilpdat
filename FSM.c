@@ -22,11 +22,12 @@ ElevatorState fsm_do_INIT(){
 
 
 ElevatorState fsm_do_IDLE(){
+	lastFloor = elev_get_floor_sensor_signal();
+	elev_set_floor_indicator(lastFloor);
 	register_update();
 	if (elev_get_stop_signal()){
 		return STOP;
 	}
-	lastFloor = elev_get_floor_sensor_signal();
 	switch (determ_dir(lastDir, lastFloor, IDLE)){
 		case 1:
 		return UP;
@@ -42,6 +43,7 @@ ElevatorState fsm_do_IDLE(){
 
 		default:
 		return IDLE;
+		break;
 
 	}
 }
@@ -53,8 +55,9 @@ ElevatorState fsm_do_UP(){
 	if (elev_get_stop_signal()){
 		return STOP;
 	}
-	lastFloor = elev_get_floor_sensor_signal();
 	if (elev_get_floor_sensor_signal()!= -1){
+			lastFloor = elev_get_floor_sensor_signal();
+			elev_set_floor_indicator(lastFloor);
 		switch (determ_dir(DIRN_UP, lastFloor, UP)){
 			case 0:
 			return FLOOR;
@@ -65,17 +68,19 @@ ElevatorState fsm_do_UP(){
 			break;
 		}
 	}
+	return UP;
 }
 
 ElevatorState fsm_do_DOWN(){
-	lastDir = DIRN_DOWN;
 	elev_set_motor_direction(DIRN_DOWN);
+	lastDir = DIRN_DOWN;
 	register_update();
 	if (elev_get_stop_signal()){
 		return STOP;
 	}
-	lastFloor = elev_get_floor_sensor_signal();
 	if (elev_get_floor_sensor_signal()!= -1){
+		lastFloor = elev_get_floor_sensor_signal();
+		elev_set_floor_indicator(lastFloor);
 		switch (determ_dir(DIRN_DOWN, lastFloor, DOWN)){
 			case 0:
 			return FLOOR;
@@ -86,9 +91,11 @@ ElevatorState fsm_do_DOWN(){
 			break;
 		}
 	}
+	return DOWN;
 }
 
 ElevatorState fsm_do_FLOOR(){
+	lastFloor = elev_get_floor_sensor_signal();
 	elev_set_motor_direction(DIRN_STOP);
 	elev_set_floor_indicator(elev_get_floor_sensor_signal());
 	elev_set_door_open_lamp(1);
@@ -100,26 +107,36 @@ ElevatorState fsm_do_FLOOR(){
 }
 
 ElevatorState fsm_do_STOP(){
+	printf("IN STOP\n");
 	elev_set_motor_direction(DIRN_STOP);
 	elev_set_stop_lamp(1);
 	register_reset_all();
 	if(elev_get_floor_sensor_signal() != -1){
 		elev_set_door_open_lamp(1);
 	}
+	printf("In STOP%d\n", lastFloor);
 	while(1){
 		if(!elev_get_stop_signal()){
-		register_update();
-		switch(determ_dir(lastDir, lastFloor, STOP)){
-			case 1:
-				return UP;
-				break;
-			case -1:
-				return DOWN;
-				break;
-			case 0:
-				return FLOOR;
-				break;
-		}
+			register_update();
+			switch(determ_dir(lastDir, lastFloor, STOP)){
+				case 1:
+					elev_set_stop_lamp(0);
+					elev_set_door_open_lamp(0);
+						return UP;
+						break;
+				case -1:
+					elev_set_stop_lamp(0);
+					elev_set_door_open_lamp(0);
+					return DOWN;
+					break;
+				case 0:
+					elev_set_stop_lamp(0);
+					elev_set_door_open_lamp(0);
+					return FLOOR;
+					break;
+				default:
+					continue;
+			}
 
 		}
 

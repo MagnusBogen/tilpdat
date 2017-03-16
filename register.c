@@ -2,18 +2,18 @@
 #include <stdio.h>
 #include "elev.h"
 
-
 void register_set(int button, int floor){
 
 }
 
 bool register_get(int button, int floor){
+	return buttonRegister[button][floor];
 
 }
 
 
 void register_reset_floor(int floor){
-	for(button=0;button<N_BUTTONS;button++){
+	for(int button=0;button<N_BUTTONS;button++){
 		register_reset(button,floor);
 	}
 }

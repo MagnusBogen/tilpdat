@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "elev.h"
 #include "register.h"
+#include "determ.h"
 
 
 typedef enum ElevatorState{INIT, IDLE, UP, DOWN, FLOOR,STOP}ElevatorState;

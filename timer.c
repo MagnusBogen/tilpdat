@@ -30,7 +30,7 @@ int timer_delay(int t){
     while(1){
         register_update();
         if(buttonRegister[0][elev_get_floor_sensor_signal()] || buttonRegister[1][elev_get_floor_sensor_signal()] || buttonRegister[2][elev_get_floor_sensor_signal()]){
-            reset_floor(elev_get_floor_sensor_signal());
+            register_reset_floor(elev_get_floor_sensor_signal());
             start = timer_start();
             
         }
