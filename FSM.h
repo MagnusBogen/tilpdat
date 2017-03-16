@@ -6,15 +6,25 @@
 
 typedef enum ElevatorState{INIT, IDLE, UP, DOWN, FLOOR,STOP}ElevatorState;
 
-int dir;
-int FSM_floor;
+int lastDir;
+int lastFloor;
 
 
-ElevatorState do_INIT();
-ElevatorState do_IDLE();
-ElevatorState do_UP();
-ElevatorState do_DOWN();
-ElevatorState do_FLOOR();
-ElevatorState do_STOP();
+ElevatorState fsm_do_INIT();
+
+
+ElevatorState fsm_do_IDLE();
+
+
+ElevatorState fsm_do_UP();
+
+
+ElevatorState fsm_do_DOWN();
+
+
+ElevatorState fsm_do_FLOOR();
+
+
+ElevatorState fsm_do_STOP();
 
 

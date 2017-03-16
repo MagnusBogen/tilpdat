@@ -7,7 +7,9 @@ void register_set(int button, int floor){
 
 }
 
-bool register_get(int button, int floor)
+bool register_get(int button, int floor){
+
+}
 
 
 void register_reset_floor(int floor){
@@ -74,9 +76,6 @@ void register_reset_all(){
 
 
 void register_update(){
-//	if (elev_get_floor_sensor_signal() >= 0){
-//		 elev_set_floor_indicator(elev_get_floor_sensor_signal());
-//		}
 	for (int b = 0; b < N_BUTTONS; b++){
 		for (int f = 0; f < N_FLOORS; f++){
 			if ((f==3 && b==BUTTON_CALL_UP) || (f==0 && b==BUTTON_CALL_DOWN)){

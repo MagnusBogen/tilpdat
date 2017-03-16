@@ -4,37 +4,32 @@
 
 
 int main() {
-	//test_dir();
-    //Initialize hardware
     if (!elev_init()) {
         printf("Unable to initialize elevator hardware!\n");
         return 1;
     }
-    elev_set_motor_direction(DIRN_STOP);
-    elev_set_motor_direction(DIRN_DOWN);
     
-
     ElevatorState currentState = INIT;
     while(1){
 	switch(currentState){
 	    case INIT:
-	        currentState = do_INIT();
+	        currentState = fsm_do_INIT();
 	        break;
 	    case IDLE:
-		  currentState = do_IDLE();
+		  currentState = fsm_do_IDLE();
 		  break;
         case UP:
-        	currentState = do_UP();
+        	currentState = fsm_do_UP();
             break;
         case DOWN:
-        	currentState = do_DOWN();
+        	currentState = fsm_do_DOWN();
 		  break;
 		case FLOOR:
-			currentState = do_FLOOR();
+			currentState = fsm_do_FLOOR();
 			break;
 
 		case STOP:
-			currentState = do_STOP();
+			currentState = fsm_do_STOP();
 			break;
 	}
     }
