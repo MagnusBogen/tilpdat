@@ -5,55 +5,52 @@
 
 int determ_dir(int lastDir, int lastFloor, int state){
 ////////////////////////////UP///////////////////////////////////////////
-	if (state == 2){
-		//printf("In UP\n");
+	if (state == UP){
 		for (int f=N_FLOORS-1; f >= 0; f--){
 
-			if (buttonRegister[2][f] && lastFloor == f)	{
+			if (register_get(2,f) && lastFloor == f)	{
 				register_reset_floor(f);
 				return 0;
 			}
-
-			else if(buttonRegister[0][f] && lastFloor == f)	{
+			else if(register_get(0,f) && lastFloor == f)	{
 				register_reset_floor(f);
 				return 0;
 			}
-
-			else if(buttonRegister[1][f] && lastFloor == f && register_empty_above(f)){
+			else if(register_get(1,f) && lastFloor == f && register_empty_above(f)){
 				register_reset(1,f);
 				return 0;
 			}
-		
 		}
 	}
+//////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////DOWN//////////////////////////////////////////
-	else if (state == 3) {
+	else if (state == DOWN) {
 		for (int f=0; f < N_FLOORS; f++){
 
-			if (buttonRegister[2][f] && lastFloor == f)	{
+			if (register_get(2,f) && lastFloor == f)	{
 				register_reset_floor(f);
 				return 0;
 			}
-
-			else if(buttonRegister[1][f] && lastFloor == f)	{
+			else if(register_get(1,f) && lastFloor == f)	{
 				register_reset_floor(f);
 				return 0;
 			}
-
-			else if(buttonRegister[0][f] && lastFloor == f && register_empty_below(f))	{
+			else if(register_get(0,f) && lastFloor == f && register_empty_below(f))	{
 				register_reset(0,f);
 				return 0;
 			}
-
 		}
-
 	}
+//////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////IDLE//////////////////////////////////////////
-	else if (state == 1){
+	else if (state == IDLE){
 		////////////////////DIRN_UP///////////////////////////////////////
 		if (lastDir == DIRN_UP){
 			for (int f=N_FLOORS-1; f >= 0; f--){
-				if (buttonRegister[2][f]){
+
+				if (register_get(2,f)){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
 						register_reset_floor(f);
@@ -61,7 +58,7 @@ int determ_dir(int lastDir, int lastFloor, int state){
 					}
 					else {return -1;}
 			}
-				else if(buttonRegister[0][f]){
+				else if(register_get(0,f)){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
 						register_reset_floor(f);
@@ -69,7 +66,7 @@ int determ_dir(int lastDir, int lastFloor, int state){
 					}
 					else {return -1;}
 				}
-				else if(buttonRegister[1][f]){
+				else if(register_get(1,f)){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
 						register_reset_floor(f);
@@ -77,12 +74,14 @@ int determ_dir(int lastDir, int lastFloor, int state){
 					}
 					else {return -1;}
 				}
+			}
 		}
-		}
+		///////////////////////////////////////////////////////////////////
+
 		////////////////////DIRN_DOWN//////////////////////////////////////
 		else if (lastDir == DIRN_DOWN){
 			for (int f=0; f < N_FLOORS; f++){
-				if (buttonRegister[2][f]){
+				if (register_get(2,f)){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
 						register_reset_floor(f);
@@ -90,7 +89,7 @@ int determ_dir(int lastDir, int lastFloor, int state){
 					}
 					else {return -1;}
 			}
-				else if(buttonRegister[0][f]){
+				else if(register_get(0,f)){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
 						register_reset_floor(f);
@@ -98,23 +97,29 @@ int determ_dir(int lastDir, int lastFloor, int state){
 					}
 					else {return -1;}
 				}
-				else if(buttonRegister[1][f]){
+				else if(register_get(1,f)){
 					if (f>lastFloor)	{return 1;}
 					else if (f == lastFloor){
 						register_reset_floor(f);
 						return 0;}
 					else {return -1;}
-				}
-		
+				}	
+			}
 		}
-		}
+		///////////////////////////////////////////////////////////////////
 	}
+//////////////////////////////////////////////////////////////////////////
+
 ////////////////////////////STOP//////////////////////////////////////////
-		else if(state == 5){
-			for (int f=0; f < N_FLOORS; f++){
-				for(int b=0; b <N_BUTTONS; b++){
-					if (buttonRegister[b][f]){
-						if (f>lastFloor){
+		else if(state == STOP){
+			if (lastFloor == -1){
+				printf("ERROR! LastFloor = -1!\n");
+				return 69;
+			}
+			for (int f = 0; f < N_FLOORS; f++){
+				for(int b = 0; b < N_BUTTONS; b++){
+					if(register_get(b,f)){
+						if(f>lastFloor){
 							return 1;
 						}
 						else if(f<lastFloor){
@@ -135,10 +140,8 @@ int determ_dir(int lastDir, int lastFloor, int state){
 						}
 					}
 				}
-				
-			
-				}
-		
+			}
 		}
 	return 69;
+//////////////////////////////////////////////////////////////////////////
 }
